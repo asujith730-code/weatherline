@@ -1,0 +1,20 @@
+AI_CCTV_Attendance/
+├── app.py
+├── camera.py
+├── face_recognition.py
+├── attendance.py
+├── database.py
+├── requirements.txt
+├── students/
+├── templates/
+│   ├── dashboard.html
+│   ├── register.html
+│   └── reports.html
+├── static/
+│   ├── style.css
+│   └── script.js
+└── attendance.dbcd "D:\vs code sujith\AI_CCTV_Attendance"
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python app.py

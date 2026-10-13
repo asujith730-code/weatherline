@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reports | Fieldnote Attendance</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body data-page="reports">
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('dashboard') }}" aria-label="Fieldnote Attendance home">
+      <span class="brand-mark" aria-hidden="true">F</span>
+      <span>fieldnote <small>ATTENDANCE</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a class="nav-link" href="{{ url_for('dashboard') }}">Overview</a>
+      <a class="nav-link" href="{{ url_for('register_page') }}">Students</a>
+      <a class="nav-link active" href="{{ url_for('reports') }}">Reports</a>
+    </nav>
+    <div class="local-badge"><span></span> LOCAL SYSTEM</div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">RECORDS / ATTENDANCE LOG</p>
+        <h1>Reports<span class="heading-period">.</span></h1>
+        <p class="lede">Review recognized check-ins and export a filtered register.</p>
+      </div>
+    </section>
+
+    <section class="panel report-panel">
+      <form class="filter-bar" method="get" action="{{ url_for('reports') }}">
+        <div class="filter-field"><label class="field-label" for="start">From</label><input class="text-input date-input" type="date" id="start" name="start" value="{{ start_date }}"></div>
+        <div class="filter-field"><label class="field-label" for="end">Through</label><input class="text-input date-input" type="date" id="end" name="end" value="{{ end_date }}"></div>
+        <button class="button button-primary" type="submit">Apply dates</button>
+        <a class="button button-quiet export-button" href="{{ url_for('export_attendance', start=start_date, end=end_date) }}"><span aria-hidden="true">↓</span> Export CSV</a>
+      </form>
+
+      <div class="table-meta"><span>{{ records|length }} record{% if records|length != 1 %}s{% endif %}</span><span>One entry per student per day</span></div>
+      <div class="table-scroll">
+        <table class="attendance-table">
+          <thead><tr><th>STUDENT</th><th>STUDENT ID</th><th>DATE</th><th>TIME</th><th>METHOD</th></tr></thead>
+          <tbody>
+            {% for record in records %}
+            <tr>
+              <td class="table-student">{{ record['name'] }}</td>
+              <td>{{ record['student_code'] }}</td>
+              <td>{{ record['attendance_date'] }}</td>
+              <td>{{ record['attended_at'][11:16] }}</td>
+              <td><span class="method-tag"><i></i> FACE MATCH</span></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="5" class="table-empty"><span class="empty-mark" aria-hidden="true">--</span><strong>No attendance records found</strong><span>Try a different date range or check in from the live monitor.</span></td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% if records|length == 500 %}<p class="table-limit">Showing the latest 500 records. Use a date range to narrow this report.</p>{% endif %}
+    </section>
+    <footer class="page-footer"><span>FIELDNOTE / ATTENDANCE</span><span>Local records · CSV export</span></footer>
+  </main>
+</body>
+</html>

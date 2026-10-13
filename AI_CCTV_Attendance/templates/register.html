@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enroll student | Fieldnote Attendance</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body data-page="register">
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('dashboard') }}" aria-label="Fieldnote Attendance home">
+      <span class="brand-mark" aria-hidden="true">F</span>
+      <span>fieldnote <small>ATTENDANCE</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a class="nav-link" href="{{ url_for('dashboard') }}">Overview</a>
+      <a class="nav-link active" href="{{ url_for('register_page') }}">Students</a>
+      <a class="nav-link" href="{{ url_for('reports') }}">Reports</a>
+    </nav>
+    <div class="local-badge"><span></span> LOCAL SYSTEM</div>
+  </header>
+
+  <main class="page-shell narrow-shell">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">STUDENT DIRECTORY / NEW RECORD</p>
+        <h1>Enroll a student<span class="heading-period">.</span></h1>
+        <p class="lede">Capture a few face images to create a local recognition profile.</p>
+      </div>
+      <a class="button button-quiet" href="{{ url_for('dashboard') }}"><span aria-hidden="true">←</span> Overview</a>
+    </section>
+
+    <form id="enrollment-form" class="enrollment-layout" novalidate>
+      <section class="panel enrollment-form-panel">
+        <div class="form-section-title"><span>01</span><div><h2>Student details</h2><p>Use the name and ID shown in your attendance register.</p></div></div>
+        <label class="field-label" for="student-name">Full name</label>
+        <input class="text-input" id="student-name" name="name" autocomplete="name" maxlength="80" placeholder="e.g. Asha Kumar" required>
+        <label class="field-label" for="student-code">Student ID</label>
+        <input class="text-input" id="student-code" name="student_code" maxlength="32" placeholder="e.g. STU-2048" required>
+        <div class="privacy-note"><span aria-hidden="true">⌂</span><p>Face samples stay in this project's <code>students</code> folder. They are not uploaded to a cloud service.</p></div>
+      </section>
+
+      <section class="panel capture-panel">
+        <div class="form-section-title"><span>02</span><div><h2>Face captures</h2><p>Camera permission is requested only when you start capture.</p></div></div>
+        <div class="capture-view">
+          <video id="capture-video" autoplay playsinline muted></video>
+          <div class="capture-placeholder" id="capture-placeholder"><span class="camera-glyph" aria-hidden="true">◎</span><span>Camera is off</span></div>
+          <span class="capture-counter" id="capture-counter">0 / 5</span>
+        </div>
+        <canvas id="capture-canvas" width="640" height="480" hidden></canvas>
+        <div class="capture-actions">
+          <button class="button button-quiet" type="button" id="camera-start"><span aria-hidden="true">◎</span> Start camera</button>
+          <button class="button button-primary" type="button" id="capture-button" disabled><span aria-hidden="true">+</span> Capture face</button>
+        </div>
+        <div class="capture-progress" aria-live="polite" id="capture-message">Capture at least three clear images. Vary your angle slightly.</div>
+      </section>
+
+      <div class="form-submit-row">
+        <p class="form-error" id="form-error" role="alert"></p>
+        <button class="button button-submit" id="submit-enrollment" type="submit" disabled>Save student <span aria-hidden="true">→</span></button>
+      </div>
+    </form>
+    <footer class="page-footer"><span>FIELDNOTE / ATTENDANCE</span><span>Enrollment requires the student's participation.</span></footer>
+  </main>
+</body>
+</html>

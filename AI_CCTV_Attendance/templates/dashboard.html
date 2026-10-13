@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Overview | Fieldnote Attendance</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body data-page="dashboard">
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('dashboard') }}" aria-label="Fieldnote Attendance home">
+      <span class="brand-mark" aria-hidden="true">F</span>
+      <span>fieldnote <small>ATTENDANCE</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a class="nav-link active" href="{{ url_for('dashboard') }}">Overview</a>
+      <a class="nav-link" href="{{ url_for('register_page') }}">Students</a>
+      <a class="nav-link" href="{{ url_for('reports') }}">Reports</a>
+    </nav>
+    <div class="local-badge"><span></span> LOCAL SYSTEM</div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">{{ weekday }}, {{ today }}</p>
+        <h1>Good morning<span class="heading-period">.</span></h1>
+        <p class="lede">Attendance at a glance. Camera matching runs on this device.</p>
+      </div>
+      <a class="button button-primary" href="{{ url_for('register_page') }}"><span aria-hidden="true">+</span> Enroll student</a>
+    </section>
+
+    <section class="metric-row" aria-label="Today's summary">
+      <article class="metric metric-green">
+        <span class="metric-label">PRESENT TODAY</span>
+        <strong id="present-count">{{ present_count }}</strong>
+        <span class="metric-note">Unique check-ins today</span>
+      </article>
+      <article class="metric metric-light">
+        <span class="metric-label">ENROLLED STUDENTS</span>
+        <strong id="student-count">{{ student_count }}</strong>
+        <span class="metric-note">In the local directory</span>
+      </article>
+      <article class="metric metric-light metric-date">
+        <span class="metric-label">TODAY'S DATE</span>
+        <strong>{{ today }}</strong>
+        <span class="metric-note">Attendance resets daily</span>
+      </article>
+    </section>
+
+    <div class="dashboard-grid">
+      <section class="panel live-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">LIVE MONITOR</p>
+            <h2>Camera feed</h2>
+          </div>
+          <span class="status-pill"><i></i> Checking</span>
+        </div>
+        <div class="feed-frame">
+          <img src="{{ url_for('video_feed') }}" alt="Live camera feed with face detection overlays">
+          <span class="feed-stamp">CAM 01 <b>·</b> LOCAL</span>
+        </div>
+        <div class="feed-caption">
+          <span class="feed-dot"></span>
+          <span>Recognized faces are checked in once per day.</span>
+          <span class="feed-caption-right">No cloud connection</span>
+        </div>
+      </section>
+
+      <section class="panel roster-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">DIRECTORY</p>
+            <h2>Students</h2>
+          </div>
+          <a class="text-link" href="{{ url_for('register_page') }}">Manage <span aria-hidden="true">→</span></a>
+        </div>
+        {% if students %}
+        <div class="roster-list">
+          {% for student in students[:7] %}
+          <div class="roster-row">
+            <span class="avatar" aria-hidden="true">{{ student['name'][0]|upper }}</span>
+            <span class="roster-name">{{ student['name'] }}<small>{{ student['student_code'] }}</small></span>
+            <span class="roster-count">{{ student['attendance_count'] }} <small>days</small></span>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <span class="empty-mark" aria-hidden="true">01</span>
+          <h3>Your roster starts here</h3>
+          <p>Enroll a student to begin local face matching and attendance records.</p>
+          <a class="text-link" href="{{ url_for('register_page') }}">Add first student <span aria-hidden="true">→</span></a>
+        </div>
+        {% endif %}
+        {% if students|length > 7 %}<p class="list-foot">Showing 7 of {{ students|length }} students</p>{% endif %}
+      </section>
+    </div>
+
+    <footer class="page-footer"><span>FIELDNOTE / ATTENDANCE</span><span>Records remain on this computer.</span></footer>
+  </main>
+</body>
+</html>
